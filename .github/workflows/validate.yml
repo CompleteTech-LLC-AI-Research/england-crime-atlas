@@ -11,5 +11,9 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - name: Check Python syntax
         run: python3 -m compileall -q src
+      - name: Check viewer JavaScript syntax
+        run: |
+          node --check src/convictions_panel.js
+          node --check src/camera_panel.js
       - name: Reconcile published aggregates and metadata
         run: python3 src/verify_published_map.py

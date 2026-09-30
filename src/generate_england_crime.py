@@ -13,7 +13,7 @@ from pathlib import Path
 from pyproj import Transformer
 
 
-def build(source, output, cell_m=2000, convictions=None):
+def build(source, output, cell_m=2000, convictions=None, cameras=None):
     if cell_m < 250:
         raise ValueError('Cell size must be at least 250 metres')
     receipt = json.loads(source.with_suffix('.metadata.json').read_text(encoding='utf-8'))
@@ -95,9 +95,18 @@ def build(source, output, cell_m=2000, convictions=None):
     if convictions:
         payload['convictions'] = json.loads(convictions.read_text(encoding='utf-8'))
         metadata['convictions_enrichment'] = payload['convictions']['metadata']
+    if cameras:
+        payload['cameras'] = json.loads(cameras.read_text(encoding='utf-8'))
+        if payload['cameras']['metadata']['cell_m'] != cell_m:
+            raise ValueError('Camera and crime grid sizes differ')
+        from attach_camera_enrichment import index_grid
+        index_grid(payload)
     output.mkdir(parents=True, exist_ok=True)
     template = Path(__file__).with_name('england_crime_map.html').read_text(encoding='utf-8')
     template = template.replace('__ENRICHMENT_SCRIPT__', Path(__file__).with_name('convictions_panel.js').read_text(encoding='utf-8'))
+    template = template.replace('__CAMERA_SCRIPT__', Path(__file__).with_name('camera_panel.js').read_text(encoding='utf-8'))
+    if cameras:
+        (output / 'cameras_metadata.json').write_text(json.dumps(payload['cameras']['metadata'], indent=2), encoding='utf-8')
     encoded = json.dumps(payload, separators=(',', ':')).replace('</', '<\\/')
     (output / 'index.html').write_text(template.replace('__PAYLOAD__', encoded), encoding='utf-8')
     (output / 'run_metadata.json').write_text(json.dumps(metadata, indent=2), encoding='utf-8')
@@ -115,5 +124,6 @@ if __name__ == '__main__':
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--cell-m', type=int, default=2000)
     parser.add_argument('--convictions', type=Path, help='Prepared MoJ aggregate JSON')
+    parser.add_argument('--cameras', type=Path, help='Prepared camera positions JSON')
     args = parser.parse_args()
-    build(args.input, args.output_dir, args.cell_m, args.convictions)
+    build(args.input, args.output_dir, args.cell_m, args.convictions, args.cameras)

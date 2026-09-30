@@ -7,9 +7,10 @@ from pathlib import Path
 
 def verify(directory):
     source = (directory / 'index.html').read_text(encoding='utf-8')
-    assert '__PAYLOAD__' not in source and '__ENRICHMENT_SCRIPT__' not in source
+    assert all(marker not in source for marker in ['__PAYLOAD__', '__ENRICHMENT_SCRIPT__', '__CAMERA_SCRIPT__'])
     embedded = source.split('const DATA=', 1)[1].split(';\nconst meta=', 1)[0]
     data = json.loads(embedded)
+    assert 'cameras' not in data, 'Camera snapshots remain local pending reuse licence clarification'
     metadata = json.loads((directory / 'run_metadata.json').read_text(encoding='utf-8'))
     assert data['metadata'] == metadata, 'HTML and run metadata disagree'
     names = data['categories']
