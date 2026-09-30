@@ -15,6 +15,16 @@
 <label for="opacity">Crime overlay opacity · <span id="opacity-value">45%</span></label><input id="opacity" type="range" min="0" max="90" value="45" style="width:100%;accent-color:var(--accent)" aria-label="Crime overlay opacity"><br>
 <button id="reset">View all England ↗</button><p class="note">These are recorded counts, not population-adjusted rates or a measure of personal safety. Locations are anonymised. Blank areas may reflect missing data.</p>
 <p class="note" id="missing" style="border-left:3px solid var(--accent);padding-left:12px"></p><details><summary>Coverage &amp; sources</summary><p class="note" id="quality"></p><div id="coverage"></div><p class="note"><a href="https://data.police.uk/data/" target="_blank" rel="noopener">Download official CSV data</a> · <a href="https://data.police.uk/about/" target="_blank" rel="noopener">Methodology</a> · <a href="https://data.police.uk/changelog/" target="_blank" rel="noopener">Known data issues</a> · <a href="run_metadata.json">Run receipt</a></p><p class="note">Contains public sector information licensed under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3.0</a>.</p></details>
+<details id="camera-controls" hidden open><summary>Bristol · CCTV pilot</summary>
+<p class="note" id="camera-receipt"></p>
+<label><input type="checkbox" id="camera-toggle"> Show published camera positions</label><button id="camera-focus">Explore Bristol ↗</button>
+<label><input type="checkbox" id="camera-proximity"> Show hypothetical proximity circles</label>
+<label for="camera-radius">Scenario distance · <span id="camera-radius-label">100 m</span></label><input type="range" id="camera-radius" min="25" max="250" step="25" value="100" style="width:100%">
+<p class="note">Teal dots = distinct published positions. Blue rings = assumed proximity, not viewing areas. Click a dot or crime cell to compare counts.</p>
+<p class="note" id="camera-stats" aria-live="polite"></p><p class="note" id="camera-overlap" aria-live="polite"></p>
+<p class="note">Actual coverage: unknown. Investigation benefit: not assessable. No direction, range, operating dates or footage-use records are provided. July crime locations are anonymised; present-day cameras cannot prove an incident was visible. No listed position does not mean no cameras.</p>
+<p class="note"><a id="camera-source" target="_blank" rel="noopener">Council source</a> · <a href="cameras_metadata.json">Camera receipt</a></p>
+</details>
 </section><section id="court-controls" class="court-controls" hidden>
 <p class="note court-period" id="court-period"></p>
 <label for="court-force">Police force area</label><select id="court-force"></select>
@@ -53,4 +63,5 @@ selector.addEventListener('change',()=>{selected=selector.value;render()});docum
 document.getElementById('quality').textContent=fmt(meta.counts.england_rows)+' records identified by English LSOA codes. '+fmt(meta.counts.invalid_coordinates||0)+' excluded for invalid coordinates; '+fmt(meta.counts.missing_lsoa||0)+' source records lack an LSOA and cannot be assigned to England. '+fmt(meta.counts.duplicate_crime_ids||0)+' duplicate crime IDs excluded. Forces listed below contributed English records, including records from Welsh forces assigned to English LSOAs; counts include ASB.';
 Object.entries(meta.forces).sort(([a],[b])=>a.localeCompare(b)).forEach(([name,c])=>{const row=document.createElement('div'),label=document.createElement('span'),count=document.createElement('span');label.textContent=name;count.textContent=fmt(c.mapped_rows||0);row.append(label,count);document.getElementById('coverage').appendChild(row)});render();map.fitBounds([[49.85,-6.5],[55.85,1.85]]);
 __ENRICHMENT_SCRIPT__
+__CAMERA_SCRIPT__
 </script></body></html>

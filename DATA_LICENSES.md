@@ -9,3 +9,5 @@ The basemap is © [OpenStreetMap contributors](https://www.openstreetmap.org/cop
 The interactive viewer loads Leaflet 1.9.4 from unpkg. Leaflet is distributed under its [BSD 2-Clause licence](https://github.com/Leaflet/Leaflet/blob/v1.9.4/LICENSE).
 
 These statements describe third-party data and libraries; they do not grant a separate licence for this repository's application code.
+
+Local Bristol CCTV pilot: Bristol City Council public Pinpoint layer 30. The portal attributes Bristol City Council and OS Crown copyright and database rights 2026 OS 100023406. No explicit reuse licence was found on the layer or portal item; public access is not treated as a redistribution licence. Camera snapshot publication is pending licence clarification.
