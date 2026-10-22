@@ -164,3 +164,7 @@ python src/verify_camera_enrichment.py
 A full crime rebuild accepts `--cameras data/bristol-cameras.json`. The raw camera response stays under ignored `data/cameras/`; its SHA-256 is recorded in `cameras_metadata.json`. The existing crime and court verification remains independent.
 
 The committed viewer contains no Bristol camera snapshot. Local enrichment is stored in ignored `results/output-camera-pilot/`; when serving `results`, open `/output-camera-pilot/2026-07/index.html`.
+
+## License
+
+Code and documentation are released under the [MIT License](LICENSE). Source data keeps its own licences; see [DATA_LICENSES.md](DATA_LICENSES.md).
